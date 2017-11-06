@@ -1,0 +1,46 @@
+---
+# vars file for acme-tiny-setup/
+acme__tiny__user: '{{ app__acme__tiny__user |
+                            d(default__acme__tiny__user) }}'
+acme__tiny__group: '{{ app__acme__tiny__group |
+                            d(default__acme__tiny__group) }}'
+acme__tiny__home: '{{ app__acme__tiny__home |
+                            d(default__acme__tiny__home) }}'
+
+acme__tiny__config_dir: '{{ app__acme__tiny__config_dir |
+                            d(default__acme__tiny__config_dir) }}'
+acme__tiny__openssl_config: '{{ app__acme__tiny__openssl_config |
+                            d(default__acme__tiny__openssl_config) }}'
+acme__tiny__challenge_dir: '{{ app__acme__tiny__challenge_dir |
+                            d(default__acme__tiny__challenge_dir) }}'
+
+acme__tiny__account_key: '{{ app__acme__tiny__account_key |
+                            d(default__acme__tiny__account_key) }}'
+
+acme__tiny__domain: '{{ app__acme__tiny__domain |
+                            d(default__acme__tiny__domain) }}'
+
+acme__tiny__cert_name: '{{ acme__tiny__domain[0]
+                            if (acme__tiny__domain is iterable and
+                            not acme__tiny__domain is string)
+                            else acme__tiny__domain }}'
+
+acme__tiny__log_dir: '{{ app__acme__tiny__log_dir |
+                            d(default__acme__tiny__log_dir) }}'
+acme__tiny__cert_path: '{{ acme__tiny__config_dir }}/{{ acme__tiny__cert_name }}'
+acme__tiny__cert_dir: '{{ acme__tiny__cert_path }}'
+acme__tiny__key: '{{ acme__tiny__cert_path }}.key'
+acme__tiny__request: '{{ acme__tiny__cert_path }}.csr'
+acme__tiny__certificate: '{{ acme__tiny__cert_path }}.crt'
+
+acme__tiny__letsencrypt_certs:
+  - url: 'https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem'
+    file: 'intermediate.crt'
+  - url: 'https://letsencrypt.org/certs/isrgrootx1.pem'
+    file: 'ca.crt'
+
+acme__tiny__key_length: '{{ app__acme__tiny__key_length |
+                            d(default__acme__tiny__key_length) }}'
+
+
+
