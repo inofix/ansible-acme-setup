@@ -1,0 +1,90 @@
+---
+# tasks file for acme-tiny-setup/
+
+- name: Certificate renewal group
+  group:
+    name: '{{ acme__tiny__group }}'
+    system: True
+
+- name: Certificate renewal user
+  user:
+    name: '{{ acme__tiny__user }}'
+    group: '{{ acme__tiny__group }}'
+    system: True
+    home: '{{ acme__tiny__home }}'
+    createhome: yes
+
+- name: Configuration and certificate directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  with_items:
+    - '{{ acme__tiny__config_dir }}'
+    - '{{ acme__tiny__cert_dir }}'
+
+- name: Challenge and logging directory
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: '{{ acme__tiny__user }}'
+    group: '{{ acme__tiny__group }}'
+    mode: '0755'
+  with_items:
+    - '{{ acme__tiny__log_dir }}'
+    - '{{ acme__tiny__challenge_dir }}'
+
+- name: Download letsencrypt CA and intermediate certificates
+  get_url:
+    url: '{{ item.url }}'
+    dest: '{{ acme__tiny__config_dir }}/{{ item.file }}'
+    owner: 'acme'
+    group: 'acme'
+    mode: '0644'
+  with_items: '{{ acme__tiny__letsencrypt_certs }}'
+
+- name: Account key
+  shell: "umask 027 && /usr/bin/openssl genrsa '{{ acme__tiny__key_length }}' > '{{ acme__tiny__account_key }}'"
+  args:
+    creates: '{{ acme__tiny__account_key }}'
+
+- name: Account key permissions
+  file:
+    path: '{{ acme__tiny__account_key }}'
+    owner: 'root'
+    group: '{{ acme__tiny__group }}'
+    mode: '0640'
+
+- name: Private key
+  shell: "umask 077 && /usr/bin/openssl genrsa '{{ acme__tiny__key_length }}' > '{{ acme__tiny__key }}'"
+  args:
+    creates: '{{ acme__tiny__key }}'
+
+- name: Private key permissions
+  file:
+    path: '{{ acme__tiny__key }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+
+- name: Remove any existing certificate request
+  file:
+    path: '{{ acme__tiny__request }}'
+    state: 'absent'
+
+- name: Create a new simple certificate request
+  shell: '/usr/bin/openssl req -new -sha256 -key {{ acme__tiny__key }} -subj "/CN={{ acme__tiny__domain }}" > {{ acme__tiny__request }}'
+  args:
+    creates: '{{ acme__tiny__request }}'
+  when: acme__tiny__domain is string
+
+- name: Create a new multi-domain certificate request
+  shell: '/usr/bin/openssl req -new -sha256 -key {{ acme__tiny__key }} -subj "/" -reqexts SAN -config <(cat {{ acme__tiny__openssl_config }} <(printf "[SAN]\nsubjectAltName=DNS:{{ acme__tiny__domain | join(",DNS:") }}")) > {{ acme__tiny__request }}'
+  args:
+    executable: '/bin/bash'
+    creates: '{{ acme__tiny__request }}'
+  when: acme__tiny__domain is iterable and not acme__tiny__domain is string
+  failed_when: False
+
