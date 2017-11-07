@@ -1,3 +1,5 @@
+[![Travis CI](https://img.shields.io/travis/inofix/ansible-acme-tiny-setup.svg?style=flat)](http://travis-ci.org/inofix/ansible-acme-tiny-setup)
+
 Acme-Tiny Setup
 ===============
 
