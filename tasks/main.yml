@@ -57,34 +57,3 @@
     group: '{{ acme__tiny__group }}'
     mode: '0640'
 
-- name: Private key
-  shell: "umask 077 && /usr/bin/openssl genrsa '{{ acme__tiny__key_length }}' > '{{ acme__tiny__key }}'"
-  args:
-    creates: '{{ acme__tiny__key }}'
-
-- name: Private key permissions
-  file:
-    path: '{{ acme__tiny__key }}'
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
-
-- name: Remove any existing certificate request
-  file:
-    path: '{{ acme__tiny__request }}'
-    state: 'absent'
-
-- name: Create a new simple certificate request
-  shell: '/usr/bin/openssl req -new -sha256 -key {{ acme__tiny__key }} -subj "/CN={{ acme__tiny__domain }}" > {{ acme__tiny__request }}'
-  args:
-    creates: '{{ acme__tiny__request }}'
-  when: acme__tiny__domain is string
-
-- name: Create a new multi-domain certificate request
-  shell: '/usr/bin/openssl req -new -sha256 -key {{ acme__tiny__key }} -subj "/" -reqexts SAN -config <(cat {{ acme__tiny__openssl_config }} <(printf "[SAN]\nsubjectAltName=DNS:{{ acme__tiny__domain | join(",DNS:") }}")) > {{ acme__tiny__request }}'
-  args:
-    executable: '/bin/bash'
-    creates: '{{ acme__tiny__request }}'
-  when: acme__tiny__domain is iterable and not acme__tiny__domain is string
-  failed_when: False
-

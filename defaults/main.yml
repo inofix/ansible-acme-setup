@@ -9,12 +9,11 @@ default__acme__tiny__openssl_config: '/etc/ssl/openssl.cnf'
 default__acme__tiny__challenge_dir: '/var/www/acme-challenge'
 
 default__acme__tiny__account_key: '{{ default__acme__tiny__config_dir }}/account.key'
+default__acme__tiny__key_length: 4096
 
 default__acme__tiny__domain: 'example.com'
 
 default__acme__tiny__log_dir: '/var/log/acme-tiny'
-
-default__acme__tiny__key_length: 4096
 
 default__acme__tiny__letsencrypt_certs:
   - url: 'https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem'
