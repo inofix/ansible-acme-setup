@@ -33,11 +33,8 @@ acme__tiny__key: '{{ acme__tiny__cert_path }}.key'
 acme__tiny__request: '{{ acme__tiny__cert_path }}.csr'
 acme__tiny__certificate: '{{ acme__tiny__cert_path }}.crt'
 
-acme__tiny__letsencrypt_certs:
-  - url: 'https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem'
-    file: 'intermediate.crt'
-  - url: 'https://letsencrypt.org/certs/isrgrootx1.pem'
-    file: 'ca.crt'
+acme__tiny__letsencrypt_certs: '{{ app__acme__tiny__letsencrypt_certs |
+                            d(default__acme__tiny__letsencrypt_certs) }}'
 
 acme__tiny__key_length: '{{ app__acme__tiny__key_length |
                             d(default__acme__tiny__key_length) }}'
