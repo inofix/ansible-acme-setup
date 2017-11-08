@@ -1,10 +1,12 @@
+[![Travis CI](https://img.shields.io/travis/inofix/ansible-acme-tiny-setup.svg?style=flat)](http://travis-ci.org/inofix/ansible-acme-tiny-setup)
+
 Acme-Tiny Setup
 ===============
 
-This is an ansible role for setting up and preparing everything that is required for later signing certificates with let's encrypt - see inofix.ansible-acme-tiny-sign.
+This is an ansible role for setting up and preparing everything that is required for later signing certificates with let's encrypt - see inofix.acme-tiny-sign.
 
 This role is meant to be run on any host that needs certificates.
- If the host is not accessible via web - or does not use the inofix.ansible-acme-tiny-sign role for other reasons - a solution must be provided to transfer the cert-request forth and the final certificate back from this host to the acme-host. See inofix.ansible-acme-tiny-cron-proxy for an example.
+ If the host is not accessible via web - or does not use the inofix.acme-tiny-sign role for other reasons - a solution must be provided to transfer the cert-request forth and the final certificate back from this host to the acme-host. See inofix.acme-tiny-cron-proxy for an example.
 
 The development of this role was started as zwischenloesung.acme-tiny-setup.
 
@@ -30,7 +32,7 @@ If radical changes should become necessary, a new role will be created, probably
 Installation
 ------------
 
- # ansible-galaxy install inofix.ansible-acme-tiny-setup
+ # ansible-galaxy install inofix.acme-tiny-setup
 
 Requirements
 ------------
@@ -68,7 +70,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - inofix.ansible-acme-tiny-setup
+         - inofix.acme-tiny-setup
 
 License
 -------
