@@ -11,22 +11,22 @@ Any host that signs certificates with the Let's Encrypt service, requires a web-
 
 As this is actually the central role and the only role that is needed on any host involved, the following overview is provided here.
 * A host that acts as a signing-host only and has itself no services that make use of the certificates will need to run these roles
- * inofix.acme-setup (this role)
- * inofix.acme-tiny-install
- * inofix.acme-tiny-sign
- * inofix.acme-tiny-cron-sign (to automatically repeat the signing once a month)
+  * inofix.acme-setup (this role)
+  * inofix.acme-tiny-install
+  * inofix.acme-tiny-sign
+  * inofix.acme-tiny-cron-sign (to automatically repeat the signing once a month)
 * A host that makes only use of the certificates, but does not itself request the signing directly with Let's Encrypt will need to run these roles
- * inofix.acme-setup (this role)
- * inofix.acme-request
- * inofix.acme-cron-proxy (to automatically get the certificates from a remote host)
- * inofix.acme-cron-\<service\> (to restart the service if the certificate has changed)
+  * inofix.acme-setup (this role)
+  * inofix.acme-request
+  * inofix.acme-cron-proxy (to automatically get the certificates from a remote host)
+  * inofix.acme-cron-\<service\> (to restart the service if the certificate has changed)
 * A host that runs both, a signing request tool and a certain service, will need these roles
- * inofix.acme-setup (this role)
- * inofix.acme-tiny-install
- * inofix.acme-request
- * inofix.acme-tiny-sign
- * inofix.acme-tiny-cron-sign (to automatically repeat the signing once a month)
- * inofix.acme-cron-\<service\> (to restart the service if the certificate has changed)
+  * inofix.acme-setup (this role)
+  * inofix.acme-tiny-install
+  * inofix.acme-request
+  * inofix.acme-tiny-sign
+  * inofix.acme-tiny-cron-sign (to automatically repeat the signing once a month)
+  * inofix.acme-cron-\<service\> (to restart the service if the certificate has changed)
 
 The development of this role was started as zwischenloesung.acme-tiny-setup.
 
