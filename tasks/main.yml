@@ -1,17 +1,17 @@
 ---
-# tasks file for acme-tiny-setup/
+# tasks file for acme-setup/
 
 - name: Certificate renewal group
   group:
-    name: '{{ acme__tiny__group }}'
+    name: '{{ acme__group }}'
     system: True
 
 - name: Certificate renewal user
   user:
-    name: '{{ acme__tiny__user }}'
-    group: '{{ acme__tiny__group }}'
+    name: '{{ acme__user }}'
+    group: '{{ acme__group }}'
     system: True
-    home: '{{ acme__tiny__home }}'
+    home: '{{ acme__home }}'
     createhome: yes
 
 - name: Configuration and certificate directories
@@ -22,38 +22,38 @@
     group: 'root'
     mode: '0755'
   with_items:
-    - '{{ acme__tiny__config_dir }}'
-    - '{{ acme__tiny__cert_dir }}'
+    - '{{ acme__config_dir }}'
+    - '{{ acme__cert_dir }}'
 
 - name: Challenge and logging directory
   file:
     path: '{{ item }}'
     state: directory
-    owner: '{{ acme__tiny__user }}'
-    group: '{{ acme__tiny__group }}'
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
     mode: '0755'
   with_items:
-    - '{{ acme__tiny__log_dir }}'
-    - '{{ acme__tiny__challenge_dir }}'
+    - '{{ acme__log_dir }}'
+    - '{{ acme__challenge_dir }}'
 
 - name: Download letsencrypt CA and intermediate certificates
   get_url:
     url: '{{ item.url }}'
-    dest: '{{ acme__tiny__config_dir }}/{{ item.file }}'
+    dest: '{{ acme__config_dir }}/{{ item.file }}'
     owner: 'acme'
     group: 'acme'
     mode: '0644'
-  with_items: '{{ acme__tiny__letsencrypt_certs }}'
+  with_items: '{{ acme__letsencrypt_certs }}'
 
 - name: Account key
-  shell: "umask 027 && /usr/bin/openssl genrsa '{{ acme__tiny__key_length }}' > '{{ acme__tiny__account_key }}'"
+  shell: "umask 027 && /usr/bin/openssl genrsa '{{ acme__key_length }}' > '{{ acme__account_key }}'"
   args:
-    creates: '{{ acme__tiny__account_key }}'
+    creates: '{{ acme__account_key }}'
 
 - name: Account key permissions
   file:
-    path: '{{ acme__tiny__account_key }}'
+    path: '{{ acme__account_key }}'
     owner: 'root'
-    group: '{{ acme__tiny__group }}'
+    group: '{{ acme__group }}'
     mode: '0640'
 

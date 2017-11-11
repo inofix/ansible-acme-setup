@@ -1,12 +1,12 @@
-[![Travis CI](https://img.shields.io/travis/inofix/ansible-acme-tiny-setup.svg?style=flat)](http://travis-ci.org/inofix/ansible-acme-tiny-setup)
+[![Travis CI](https://img.shields.io/travis/inofix/ansible-acme-setup.svg?style=flat)](http://travis-ci.org/inofix/ansible-acme-setup)
 
-Acme-Tiny Setup
-===============
+Acme Setup
+==========
 
 This is an ansible role for setting up and preparing everything that is required for later signing certificates with let's encrypt - see inofix.acme-tiny-sign.
 
 This role is meant to be run on any host that needs certificates.
- If the host is not accessible via web - or does not use the inofix.acme-tiny-sign role for other reasons - a solution must be provided to transfer the cert-request forth and the final certificate back from this host to the acme-host. See inofix.acme-tiny-cron-proxy for an example.
+ If the host is not accessible via web - or does not use the inofix.acme-tiny-sign role for other reasons - a solution must be provided to transfer the cert-request forth and the final certificate back from this host to the acme-host. See inofix.acme-cron-proxy for an example.
 
 The development of this role was started as zwischenloesung.acme-tiny-setup.
 
@@ -32,7 +32,7 @@ If radical changes should become necessary, a new role will be created, probably
 Installation
 ------------
 
- # ansible-galaxy install inofix.acme-tiny-setup
+ # ansible-galaxy install inofix.acme-setup
 
 Requirements
 ------------
@@ -46,21 +46,21 @@ Requirements
 Role Variables
 --------------
 
-* app\_\_acme\_\_tiny\_\_user - optional, default='acme'
-* app\_\_acme\_\_tiny\_\_group - optional, default='acme'
-* app\_\_acme\_\_tiny\_\_home - optional, default='/var/lib/acme'
-* app\_\_acme\_\_tiny\_\_config\_dir - optional, default='/etc/ssl/acme-tiny'
-* app\_\_acme\_\_tiny\_\_openssl\_config - optional, default='/etc/ssl/openssl.cnf'
-* app\_\_acme\_\_tiny\_\_challenge\_dir - optional, default='/var/www/acme-challenges'
-* app\_\_acme\_\_tiny\_\_account\_key - optional, default='account.key'
-* app\_\_acme\_\_tiny\_\_domain - optional, default='example.com'
-* app\_\_acme\_\_tiny\_\_cert\_name - optional, auto
-* app\_\_acme\_\_tiny\_\_log\_dir - optional, default='/var/log/acme-tiny'
-* app\_\_acme\_\_tiny\_\_cert\_dir - optional, auto
-* app\_\_acme\_\_tiny\_\_key - optional, auto
-* app\_\_acme\_\_tiny\_\_request - optional, auto
-* app\_\_acme\_\_tiny\_\_letsencrypt\_certs - optional, default=[ {url='https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem', file='intermediate.crt'}, {url='https://letsencrypt.org/certs/isrgrootx1.pem', file='ca.crt'} ]
-* app\_\_acme\_\_tiny\_\_key\_length - optional, default=4096
+* app\_\_acme\_\_user - optional, default='acme'
+* app\_\_acme\_\_group - optional, default='acme'
+* app\_\_acme\_\_home - optional, default='/var/lib/acme'
+* app\_\_acme\_\_config\_dir - optional, default='/etc/ssl/acme'
+* app\_\_acme\_\_openssl\_config - optional, default='/etc/ssl/openssl.cnf'
+* app\_\_acme\_\_challenge\_dir - optional, default='/var/www/acme-challenges'
+* app\_\_acme\_\_account\_key - optional, default='account.key'
+* app\_\_acme\_\_domain - optional, default='example.com'
+* app\_\_acme\_\_cert\_name - optional, auto
+* app\_\_acme\_\_log\_dir - optional, default='/var/log/acme'
+* app\_\_acme\_\_cert\_dir - optional, auto
+* app\_\_acme\_\_key - optional, auto
+* app\_\_acme\_\_request - optional, auto
+* app\_\_acme\_\_letsencrypt\_certs - optional, default=[ {url='https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem', file='intermediate.crt'}, {url='https://letsencrypt.org/certs/isrgrootx1.pem', file='ca.crt'} ]
+* app\_\_acme\_\_key\_length - optional, default=4096
 
 Dependencies
 ------------
@@ -70,7 +70,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - inofix.acme-tiny-setup
+         - inofix.acme-setup
 
 License
 -------
