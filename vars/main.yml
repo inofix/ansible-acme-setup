@@ -1,5 +1,5 @@
 ---
-# vars file for acme-tiny-setup/
+# vars file for acme-setup/
 acme__user: '{{ app__acme__user | d(default__acme__user) }}'
 acme__group: '{{ app__acme__group | d(default__acme__group) }}'
 acme__home: '{{ app__acme__home | d(default__acme__home) }}'
