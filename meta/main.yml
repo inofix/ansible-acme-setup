@@ -1,6 +1,6 @@
 galaxy_info:
   author: Michael Lustenberger
-  description: Install the famous acme-tiny python script
+  description: Prepare the system for using Let's Encrypt
   company: INOFIX GmbH
   # issue_tracker_url: http://example.com/issue/tracker
   license: license (GPLv3)
