@@ -1,5 +1,5 @@
 ---
-# defaults file for acme-tiny-setup/
+# defaults file for acme-setup/
 default__acme__user: 'acme'
 default__acme__group: 'acme'
 default__acme__home: '/var/lib/acme'
