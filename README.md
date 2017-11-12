@@ -81,6 +81,8 @@ Role Variables
 * app\_\_acme\_\_request - optional, auto
 * app\_\_acme\_\_letsencrypt\_certs - optional, default=[ {url='https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem', file='intermediate.crt'}, {url='https://letsencrypt.org/certs/isrgrootx1.pem', file='ca.crt'} ]
 * app\_\_acme\_\_key\_length - optional, default=4096
+* fqdn - optional, default={{ ansible\_fqdn | d(inventory\_hostname ) }}
+* workdir - optional, default=/tmp (local dir, used for ssh-pub-key exchange)
 
 Dependencies
 ------------

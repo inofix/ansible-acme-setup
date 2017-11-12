@@ -14,6 +14,29 @@
     home: '{{ acme__home }}'
     createhome: yes
 
+- name: Create ssh config directory for the new user - any user gets one
+  file:
+    state: directory
+    path: '{{ acme__home }}/.ssh'
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
+    mode: '0700'
+
+- name: Test if user key exists
+  stat:
+    path: '{{ acme__home }}/.ssh/id_rsa.pub'
+  register: acme__user_key_stat
+
+- name: Create ssh-keys - even if not used later, it will not hurt..
+  when: acme__user_key_stat.stat.isreg is not defined or not acme__user_key_stat.stat.isreg
+  shell: 'echo -e "n\n" | ssh-keygen -N "" -q -t rsa -f {{ acme__home }}/.ssh/id_rsa'
+
+- name: Copy the pub-key back to the ansible host for later use
+  fetch:
+    src: '{{ acme__home }}/.ssh/id_rsa.pub'
+    dest: '{{ workdir }}/{{ the__fqdn }}/{{ acme__home }}/.ssh/id_rsa.pub'
+    validate_checksum: true
+
 - name: Configuration and certificate directories
   file:
     path: '{{ item }}'

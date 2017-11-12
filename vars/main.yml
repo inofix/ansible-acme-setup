@@ -15,6 +15,7 @@ acme__account_key: '{{ app__acme__account_key |
 acme__key_length: '{{ app__acme__key_length |
                             d(default__acme__key_length) }}'
 
+the__fqdn: '{{ fqdn | d(ansible_fqdn) | d(inventory_hostname) }}'
 acme__domain: '{{ app__acme__domain | d(default__acme__domain) }}'
 
 acme__cert_name: '{{ acme__domain[0]
