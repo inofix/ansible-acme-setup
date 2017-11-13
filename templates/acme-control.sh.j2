@@ -23,9 +23,9 @@ case "$1" in
         fi
     ;;
     renew)
-        if [ -x "{{ acme__tiny__scripts_dir }}/acme-renew_$2.sh" ] ; then
+        if [ -x "{{ acme__scripts_dir }}/acme-renew_$2.sh" ] ; then
             echo "Renewing $2..."
-            {{ acme__tiny__scripts_dir }}/acme-renew_$2.sh || exit 1
+            {{ acme__scripts_dir }}/acme-renew_$2.sh || exit 1
             echo "done"
         fi
     ;;

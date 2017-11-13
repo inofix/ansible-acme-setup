@@ -34,14 +34,14 @@
 - name: Copy the pub-key back to the ansible host for later use
   fetch:
     src: '{{ acme__home }}/.ssh/id_rsa.pub'
-    dest: '{{ workdir }}/{{ the__fqdn }}/{{ acme__home }}/.ssh/id_rsa.pub'
+    dest: '{{ workdir }}'
     validate_checksum: true
 
 - name: Install helper script
   template:
     src: 'acme-control.sh.j2'
     dest: '{{ acme__bin_dir }}/acme-control.sh'
-    user: 'root'
+    owner: 'root'
     group: 'root'
     mode: '755'
 
@@ -49,7 +49,7 @@
   template:
     src: 'acme-wrapper.sh.j2'
     dest: '{{ acme__bin_dir }}/acme-wrapper.sh'
-    user: 'root'
+    owner: 'root'
     group: 'root'
     mode: '755'
 
