@@ -1,0 +1,25 @@
+#!/bin/sh
+#################################################################
+# (C) 2017, Inofix GmbH, Michael Lustenberger - see /LICENSE
+#################################################################
+# This is a wrapper script to limit ssh connections to use
+# only a subset of the features of acme-control.sh
+#################################################################
+
+# consider the first part a command
+command="${SSH_ORIGINAL_COMMAND%% *}"
+# consider the last part the argument
+domain="${SSH_ORIGINAL_COMMAND##* }"
+# (ignoring any pot. middle of the string)
+
+# control what the ssh user can do
+case "$command" in
+    get_cert*)
+        acme-control.sh $command $domain
+    ;;
+    *)
+        echo "unsupported"
+        exit 1
+    ;;
+esac
+

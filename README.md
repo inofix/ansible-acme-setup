@@ -15,6 +15,7 @@ As this is actually the central role and the only role that is needed on any hos
   * inofix.acme-tiny-install
   * inofix.acme-tiny-sign
   * inofix.acme-tiny-cron-sign (to automatically repeat the signing once a month)
+  * inofix.acme-proxy (to enable the remote host to get its certificates automatically)
 * A host that makes only use of the certificates, but does not itself request the signing directly with Let's Encrypt will need to run these roles
   * inofix.acme-setup (this role)
   * inofix.acme-request
@@ -72,6 +73,8 @@ Role Variables
 * app\_\_acme\_\_config\_dir - optional, default='/etc/ssl/acme'
 * app\_\_acme\_\_openssl\_config - optional, default='/etc/ssl/openssl.cnf'
 * app\_\_acme\_\_challenge\_dir - optional, default='/var/www/acme-challenges'
+* app_\\_acme\_\_scripts\_dir - optional, default='/etc/ssl/acme/scripts'
+* app_\\_acme\_\_bin\_dir - optional, default='/usr/local/bin'
 * app\_\_acme\_\_account\_key - optional, default='account.key'
 * app\_\_acme\_\_domain - optional, default='example.com'
 * app\_\_acme\_\_cert\_name - optional, auto
@@ -87,6 +90,7 @@ Role Variables
 Dependencies
 ------------
 
+
 Example Playbook
 ----------------
 
@@ -98,6 +102,7 @@ License
 -------
 
 GPLv3
+
 
 Author Information
 ------------------

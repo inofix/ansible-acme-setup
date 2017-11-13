@@ -37,6 +37,22 @@
     dest: '{{ workdir }}/{{ the__fqdn }}/{{ acme__home }}/.ssh/id_rsa.pub'
     validate_checksum: true
 
+- name: Install helper script
+  template:
+    src: 'acme-control.sh.j2'
+    dest: '{{ acme__bin_dir }}/acme-control.sh'
+    user: 'root'
+    group: 'root'
+    mode: '755'
+
+- name: Install wrapper script
+  template:
+    src: 'acme-wrapper.sh.j2'
+    dest: '{{ acme__bin_dir }}/acme-wrapper.sh'
+    user: 'root'
+    group: 'root'
+    mode: '755'
+
 - name: Configuration and certificate directories
   file:
     path: '{{ item }}'
