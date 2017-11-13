@@ -15,10 +15,13 @@ domain="${SSH_ORIGINAL_COMMAND##* }"
 # control what the ssh user can do
 case "$command" in
     get_cert*)
-        acme-control.sh $command $domain
+        {{ acme__bin_dir }}/acme-control.sh $command $domain
     ;;
     *)
-        echo "unsupported"
+        echo "usage: this wrapper script is thought to be used"
+        echo "on ssh-connections to restrict access to acme-control.sh"
+        echo "please log in as the acme user providing a supported action"
+        echo "and an existing certificate domain name."
         exit 1
     ;;
 esac
