@@ -13,6 +13,8 @@ acme__challenge_dir: '{{ app__acme__challenge_dir |
 acme__scripts_dir: '{{ app__acme__scripts_dir |
                             d(default__acme__scripts_dir) }}'
 acme__bin_dir: '{{ app__acme__bin_dir | d(default__acme__bin_dir) }}'
+acme__control: '{{ acme__bin_dir }}/acme-control.sh'
+acme__wrapper: '{{ acme__bin_dir }}/acme-wrapper.sh'
 
 acme__account_key: '{{ app__acme__account_key |
                             d(default__acme__account_key) }}'
@@ -34,4 +36,9 @@ acme__cert_dir: '{{ acme__cert_path }}'
 acme__letsencrypt_certs: '{{ app__acme__letsencrypt_certs |
                             d(default__acme__letsencrypt_certs) }}'
 
+acme__ssh_keytype: '{{ app__acme__ssh_keytype | d(default__acme__ssh_keytype }}'
+
+acme__ssh_keytype: '{{ app__acme__ssh_keytype | d(default__acme__ssh_keytype }}'
+acme__remote_consumer: '{{ app__acme__remote_consumer |
+                            d(default__acme__remote_consumer) }}'
 
