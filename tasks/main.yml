@@ -24,34 +24,18 @@
 
 - name: Test if user key exists
   stat:
-    path: '{{ acme__home }}/.ssh/id_rsa.pub'
+    path: '{{ acme__home }}/.ssh/id_{{ app__acme__ssh_keytype }}.pub'
   register: acme__user_key_stat
 
 - name: Create ssh-keys - even if not used later, it will not hurt..
   when: acme__user_key_stat.stat.isreg is not defined or not acme__user_key_stat.stat.isreg
-  shell: 'echo -e "n\n" | ssh-keygen -N "" -q -t rsa -f {{ acme__home }}/.ssh/id_rsa'
+  shell: 'echo -e "n\n" | ssh-keygen -N "" -q -t {{ app__acme__ssh_keytype }} -f {{ acme__home }}/.ssh/id_{{ app__acme__ssh_keytype }}'
 
 - name: Copy the pub-key back to the ansible host for later use
   fetch:
-    src: '{{ acme__home }}/.ssh/id_rsa.pub'
+    src: '{{ acme__home }}/.ssh/id_{{ app__acme__ssh_keytype }}.pub'
     dest: '{{ workdir }}'
     validate_checksum: true
-
-- name: Install helper script
-  template:
-    src: 'acme-control.sh.j2'
-    dest: '{{ acme__bin_dir }}/acme-control.sh'
-    owner: 'root'
-    group: 'root'
-    mode: '755'
-
-- name: Install wrapper script
-  template:
-    src: 'acme-wrapper.sh.j2'
-    dest: '{{ acme__bin_dir }}/acme-wrapper.sh'
-    owner: 'root'
-    group: 'root'
-    mode: '755'
 
 - name: Configuration and certificate directories
   file:
@@ -74,6 +58,33 @@
   with_items:
     - '{{ acme__log_dir }}'
     - '{{ acme__challenge_dir }}'
+
+- name: Install helper script
+  template:
+    src: 'acme-control.sh.j2'
+    dest: '{{ acme__control }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+
+- name: Install wrapper script
+  template:
+    src: 'acme-wrapper.sh.j2'
+    dest: '{{ acme__wrapper }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+
+- name: 'Allow remote access to the certificates - for defined consumers'
+  lineinfile:
+    path: '{{ acme__home }}/.ssh/authorized_keys'
+    line: 'command="{{ acme__wrapper }}" {{ lookup("file", the_file) }}'
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
+    mode: '0600'
+  vars:
+    the_file: '{{ workdir }}/{{ item }}/{{ acme__home }}/.ssh/id_{{ app__acme__ssh_keytype }}.pub'
+  with_items: '{{ acme__remote_consumer }}'
 
 - name: Download letsencrypt CA and intermediate certificates
   get_url:
