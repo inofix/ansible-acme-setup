@@ -13,19 +13,22 @@ certname="$2"
 
 case "$1" in
     get_certificate)
-        if [ -r "{{ app__acme__config_dir }}/$2/$2.crt" ] ; then
-            cat "{{ app__acme__config_dir }}/$2/$2.crt" || exit 1
+        if [ -r "{{ app__acme__config_dir }}/$certname/$certname.crt" ] ; then
+            cat "{{ app__acme__config_dir }}/$certname/$certname.crt" || exit 1
         fi
     ;;
     get_certificate_chain)
-        if [ -r "{{ app__acme__config_dir }}/$2/$2_chain.crt" ] ; then
-            cat "{{ app__acme__config_dir }}/$2/$2_chain.crt" || exit 1
+        if [ -r "{{ app__acme__config_dir }}/$certname/$certname_chain.crt" ] ; then
+            cat "{{ app__acme__config_dir }}/$certname/$certname_chain.crt" || exit 1
         fi
     ;;
+    get_ca)
+        cat "{{ app__acme__config_dir }}/$certname" || exit 1
+    ;;
     renew)
-        if [ -x "{{ acme__scripts_dir }}/acme-renew_$2.sh" ] ; then
-            echo "Renewing $2..."
-            {{ acme__scripts_dir }}/acme-renew_$2.sh || exit 1
+        if [ -x "{{ acme__scripts_dir }}/acme-renew_$certname.sh" ] ; then
+            echo "Renewing $certname..."
+            {{ acme__scripts_dir }}/acme-renew_$certname.sh || exit 1
             echo "done"
         fi
     ;;
