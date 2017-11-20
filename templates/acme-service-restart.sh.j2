@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# only expect tools in this location..
+export PATH="/bin:/usr/bin:/usr/local/bin/"
+
+# create a file to compare the certs to (one month ago)
+lastmonth=/tmp/$(basename $0)
+touch -d "last month" $lastmonth
+
+# find registered services here
+service_d="{{ acme__service_dir }}"
+if [ ! -d "$service_d" ] ; then
+    echo "Error: There is no service registered in '$service_d'."
+    exit 1
+fi
+
+# see whether any certificate was created during the last month
+new=$(find "{{ app__acme__tiny__config_dir }}" -newer $lastmonth -name "*.crt")
+
+# if any new cert was found, service the registered services
+if [ -n "$new" ] ; then
+
+    for s in "$service_d/*" ; do
+        $s
+    done
+fi
+

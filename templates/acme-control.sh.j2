@@ -8,7 +8,7 @@
 
 # the first argument is a subcommand / action
 subcommand="$1"
-# the second argument denodes the domain in question
+# the second argument denotes the domain in question
 certname="$2"
 
 case "$1" in
@@ -29,6 +29,13 @@ case "$1" in
         if [ -x "{{ acme__scripts_dir }}/acme-renew_$certname.sh" ] ; then
             echo "Renewing $certname..."
             {{ acme__scripts_dir }}/acme-renew_$certname.sh || exit 1
+            echo "done"
+        fi
+    ;;
+    restart)
+        if [ -x "{{ acme__restart }}" ] ; then
+            echo "Restart all registered services..."
+            {{ acme__restart }} || exit 1
             echo "done"
         fi
     ;;

@@ -8,6 +8,7 @@ default__acme__config_dir: '/etc/ssl/acme'
 default__acme__openssl_config: '/etc/ssl/openssl.cnf'
 default__acme__challenge_dir: '/var/www/acme-challenge'
 default__acme__scripts_dir: '{{ default__acme__config_dir }}/scripts'
+default__acme__service_dir: '{{ default__acme__config_dir }}/service.d'
 default__acme__bin_dir: '/usr/local/bin'
 
 default__acme__account_key: '{{ default__acme__config_dir }}/account.key'

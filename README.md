@@ -74,8 +74,8 @@ Role Variables
 * app\_\_acme\_\_config\_dir - optional, default='/etc/ssl/acme'
 * app\_\_acme\_\_openssl\_config - optional, default='/etc/ssl/openssl.cnf'
 * app\_\_acme\_\_challenge\_dir - optional, default='/var/www/acme-challenges'
-* app_\\_acme\_\_scripts\_dir - optional, default='/etc/ssl/acme/scripts'
-* app_\\_acme\_\_bin\_dir - optional, default='/usr/local/bin'
+* app\_\_acme\_\_scripts\_dir - optional, default='/etc/ssl/acme/scripts'
+* app\_\_acme\_\_bin\_dir - optional, default='/usr/local/bin'
 * app\_\_acme\_\_account\_key - optional, default='account.key'
 * app\_\_acme\_\_domain - optional, default='example.com'
 * app\_\_acme\_\_cert\_name - optional, auto
