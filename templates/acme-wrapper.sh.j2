@@ -15,9 +15,12 @@ domain="${args##* }"
 # (ignoring any pot. middle of the string)
 
 # control what the ssh user can do
-case "$command" in
+case "$action" in
     get_cert*)
-        {{ acme__bin_dir }}/acme-control.sh $command $domain
+        {{ acme__bin_dir }}/acme-control.sh $action $domain
+    ;;
+    get_ca|get_intermediate)
+        {{ acme__bin_dir }}/acme-control.sh $action
     ;;
     *)
         echo "usage: this wrapper script is thought to be used"
