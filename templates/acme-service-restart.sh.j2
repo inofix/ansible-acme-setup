@@ -21,7 +21,7 @@ new=$(find "{{ app__acme__tiny__config_dir }}" -newer $lastmonth -name "*.crt")
 if [ -n "$new" ] ; then
 
     for s in "$service_d/*" ; do
-        $s
+        . $s
     done
 fi
 
