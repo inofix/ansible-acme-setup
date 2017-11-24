@@ -1,12 +1,12 @@
 ---
 # tasks file for acme-setup/
 
-- name: Certificate renewal group
+- name: 'Certificate renewal group'
   group:
     name: '{{ acme__group }}'
     system: True
 
-- name: Certificate renewal user
+- name: 'Certificate renewal user'
   user:
     name: '{{ acme__user }}'
     group: '{{ acme__group }}'
@@ -14,7 +14,7 @@
     home: '{{ acme__home }}'
     createhome: yes
 
-- name: Create ssh config directory for the new user - any user gets one
+- name: 'Create ssh config directory for the new user - any user gets one'
   file:
     state: directory
     path: '{{ acme__home }}/.ssh'
@@ -22,22 +22,22 @@
     group: '{{ acme__group }}'
     mode: '0700'
 
-- name: Test if user key exists
+- name: 'Test if user key exists'
   stat:
     path: '{{ acme__home }}/.ssh/id_{{ app__acme__ssh_keytype }}.pub'
   register: acme__user_key_stat
 
-- name: Create ssh-keys - even if not used later, it will not hurt..
+- name: 'Create ssh-keys - even if not used later, it will not hurt..'
   when: acme__user_key_stat.stat.isreg is not defined or not acme__user_key_stat.stat.isreg
   shell: 'echo -e "n\n" | ssh-keygen -N "" -q -t {{ app__acme__ssh_keytype }} -f {{ acme__home }}/.ssh/id_{{ app__acme__ssh_keytype }}'
 
-- name: Copy the pub-key back to the ansible host for later use
+- name: 'Copy the pub-key back to the ansible host for later use'
   fetch:
     src: '{{ acme__home }}/.ssh/id_{{ app__acme__ssh_keytype }}.pub'
     dest: '{{ workdir }}'
     validate_checksum: true
 
-- name: Configuration and certificate directories
+- name: 'Configuration and certificate directories'
   file:
     path: '{{ item }}'
     state: directory
@@ -50,7 +50,7 @@
     - '{{ acme__scripts_dir }}'
     - '{{ acme__service_dir }}'
 
-- name: Challenge and logging directory
+- name: 'Challenge and logging directory'
   file:
     path: '{{ item }}'
     state: directory
@@ -61,7 +61,7 @@
     - '{{ acme__log_dir }}'
     - '{{ acme__challenge_dir }}'
 
-- name: Install helper script
+- name: 'Install helper script'
   template:
     src: 'acme-control.sh.j2'
     dest: '{{ acme__control }}'
@@ -69,13 +69,32 @@
     group: 'root'
     mode: '0755'
 
-- name: Install wrapper script
+- name: 'Install wrapper script'
   template:
     src: 'acme-wrapper.sh.j2'
     dest: '{{ acme__wrapper }}'
     owner: 'root'
     group: 'root'
     mode: '0755'
+
+- name: 'Install the service restarter script'
+  template:
+    src: 'acme-service-restart.sh.j2'
+    dest: '{{ acme__restart }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+
+- name: 'Install a cron job to restart registered services on cert changes'
+  cron:
+    name: 'acme-service-restart'
+    job: '{{ acme__restart }} 2>> {{ acme__log_dir }}/acme-services.log'
+    user: 'root'
+    minute: '{{ acme__cron_minute }}'
+    hour: '{{ acme__cron_hour }}'
+    day: '{{ acme__cron_day }}'
+    month: '{{ acme__cron_month }}'
+    weekday: '{{ acme__cron_weekday }}'
 
 - name: 'Allow remote access to the certificates - for defined consumers'
   lineinfile:
@@ -88,7 +107,7 @@
     the_file: '{{ workdir }}/{{ item }}/{{ acme__home }}/.ssh/id_{{ app__acme__ssh_keytype }}.pub'
   with_items: '{{ acme__remote_consumer }}'
 
-- name: Download letsencrypt CA and intermediate certificates
+- name: 'Download letsencrypt CA and intermediate certificates'
   get_url:
     url: '{{ item.url }}'
     dest: '{{ acme__config_dir }}/{{ item.file }}'
@@ -97,12 +116,12 @@
     mode: '0644'
   with_items: '{{ acme__letsencrypt_certs }}'
 
-- name: Account key
+- name: 'Account key'
   shell: "umask 027 && /usr/bin/openssl genrsa '{{ acme__key_length }}' > '{{ acme__account_key }}'"
   args:
     creates: '{{ acme__account_key }}'
 
-- name: Account key permissions
+- name: 'Account key permissions'
   file:
     path: '{{ acme__account_key }}'
     owner: 'root'
