@@ -29,3 +29,9 @@ default__acme__letsencrypt_certs:
 default__acme__ssh_keytype: 'rsa'
 default__acme__remote_consumer: []
 
+default__acme__cron_minute: '11'
+default__acme__cron_hour: '5'
+default__acme__cron_day: '*'
+default__acme__cron_month: '*'
+default__acme__cron_weekday: '*'
+

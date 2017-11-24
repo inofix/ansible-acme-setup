@@ -45,3 +45,14 @@ acme__ssh_keytype: '{{ app__acme__ssh_keytype | d(default__acme__ssh_keytype }}'
 acme__remote_consumer: '{{ app__acme__remote_consumer |
                             d(default__acme__remote_consumer) }}'
 
+acme__cron_minute: '{{ app__acme__cron_minute |
+                        d(default__acme__cron_minute) }}'
+acme__cron_hour: '{{ app__acme__cron_hour |
+                        d(default__acme__cron_hour) }}'
+acme__cron_day: '{{ app__acme__cron_day |
+                        d(default__acme__cron_day) }}'
+acme__cron_month: '{{ app__acme__cron_month |
+                        d(default__acme__cron_month) }}'
+acme__cron_weekday: '{{ app__acme__cron_weekday |
+                        d(default__acme__cron_weekday) }}'
+
