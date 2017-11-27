@@ -39,9 +39,8 @@ acme__cert_dir: '{{ acme__cert_path }}'
 acme__letsencrypt_certs: '{{ app__acme__letsencrypt_certs |
                             d(default__acme__letsencrypt_certs) }}'
 
-acme__ssh_keytype: '{{ app__acme__ssh_keytype | d(default__acme__ssh_keytype }}'
+acme__ssh_keytype: '{{ app__acme__ssh_keytype | d(default__acme__ssh_keytype) }}'
 
-acme__ssh_keytype: '{{ app__acme__ssh_keytype | d(default__acme__ssh_keytype }}'
 acme__remote_consumer: '{{ app__acme__remote_consumer |
                             d(default__acme__remote_consumer) }}'
 
