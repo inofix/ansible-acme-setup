@@ -18,7 +18,7 @@ if [ ! -d "$service_d" ] ; then
 fi
 
 # see whether any certificate was created during the last month
-new=$(find "{{ app__acme__tiny__config_dir }}" -newer $lastmonth -name "*.crt")
+new=$(find "{{ app__acme__config_dir }}" -newer $lastmonth -name "*.crt")
 
 # if any new cert was found, service the registered services
 if [ -n "$new" ] ; then
