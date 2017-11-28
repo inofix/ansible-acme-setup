@@ -9,25 +9,7 @@ This role is meant to be run on any host that needs certificates.
 If the host is not accessible via web - or does not use the inofix.acme-tiny-sign role for other reasons - a solution must be provided to transfer the cert-request forth and the final certificate back from this host to the acme-host. See inofix.acme-cron-proxy for an example.
 Any host that signs certificates with the Let's Encrypt service, requires a web-server listening on port 80 and resolving /.well-known/acme-challenge to the directory accessible for the signing tool - see inofix.acme-sign for an example.
 
-As this is actually the central role and the only role that is needed on any host involved, the following overview is provided here.
-* A host that acts as a signing-host only and has itself no services that make use of the certificates will need to run these roles
-  * inofix.acme-setup (this role)
-  * inofix.acme-tiny-install
-  * inofix.acme-tiny-sign
-  * inofix.acme-tiny-cron-sign (to automatically repeat the signing once a month)
-  * inofix.acme-proxy (to enable the remote host to get its certificates automatically)
-* A host that makes only use of the certificates, but does not itself request the signing directly with Let's Encrypt will need to run these roles
-  * inofix.acme-setup (this role)
-  * inofix.acme-request
-  * inofix.acme-cron-proxy (to automatically get the certificates from a remote host)
-  * inofix.acme-cron-\<service\> (to restart the service if the certificate has changed)
-* A host that runs both, a signing request tool and a certain service, will need these roles
-  * inofix.acme-setup (this role)
-  * inofix.acme-tiny-install
-  * inofix.acme-request
-  * inofix.acme-tiny-sign
-  * inofix.acme-tiny-cron-sign (to automatically repeat the signing once a month)
-  * inofix.acme-cron-\<service\> (to restart the service if the certificate has changed)
+See "Overview / Concept" below for details.
 
 The development of this role was started as zwischenloesung.acme-tiny-setup.
 
@@ -63,6 +45,70 @@ Requirements
 * Generic UNIX with FHS
 * Sudo
 * Systemd (per default)
+
+
+Overview / Concept
+------------------
+
+As this is actually the central role and the only role that is needed on any host involved, an overview is provided in this README. 
+
+
+_Role Perspective_
+
+* inofix.acme-setup
+  * run on any host
+  * set up the environement
+    * create user 'acme'
+    * create keys etc
+      * /etc/ssl/acme
+        * certs
+        * scripts
+        * connected services
+      * /var/log/acme
+        * logs
+      * /var/lib/acme
+        * home for user signing and copying certs
+* inofix.acme-request
+  * run on hosts using a cert (thus holding the private key)
+  * create a certificate-request (csr)
+* inofix.acme-tiny-install
+  * run on hosts signing certs with Let's Encrypt (only needs the csr)
+  * install the acme-tiny.py script
+* inofix.acme-tiny-sign
+  * run on hosts signing certs with Let's Encrypt (only needs the csr)
+  * use acme-tiny.py to ask Let's Encrypt to sign a cert for the csr
+* inofix.acme-tiny-cron-sign
+  * run on hosts signing certs with Let's Encrypt (only needs the csr)
+  * install a cron job to do the signing part as in inofix.acme-tiny-sign
+* inofix.acme-proxy
+  * run on hosts using a cert but not doing the signing themselves (e.g. mail/jabber/..)
+  * copy the cert from a remote host (that did the signing)
+* inofix.acme-service-..
+  * run on all hosts using a cert (i.e. running a certified service...)
+  * register a service to be restarted if any cert has changed
+
+
+
+_Host Perspective_
+
+* A host that acts as a signing-host only and has itself no services that make use of the certificates will need to run these roles
+  * inofix.acme-setup (this role)
+  * inofix.acme-tiny-install
+  * inofix.acme-tiny-sign
+  * inofix.acme-tiny-sign-cron (to automatically repeat the signing once a month)
+* A host that makes only use of the certificates, but does not itself request the signing directly with Let's Encrypt will need to run these roles
+  * inofix.acme-setup (this role)
+  * inofix.acme-request
+  * inofix.acme-proxy (to automatically get the certificates from a remote host)
+  * inofix.acme-service-\<service\> (to restart the service if the certificate has changed)
+* A host that runs both, a signing request tool and a certain service, will need these roles
+  * inofix.acme-setup (this role)
+  * inofix.acme-tiny-install
+  * inofix.acme-request
+  * inofix.acme-tiny-sign
+  * inofix.acme-tiny-sign-cron (to automatically repeat the signing once a month)
+  * inofix.acme-service-\<service\> (to restart the service if the certificate has changed)
+
 
 Role Variables
 --------------
