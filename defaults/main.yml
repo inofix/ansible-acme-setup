@@ -14,8 +14,6 @@ default__acme__bin_dir: '/usr/local/bin'
 default__acme__account_key: '{{ default__acme__config_dir }}/account.key'
 default__acme__account_key_length: 4096
 
-default__acme__ssh_keytype: 'rsa'
-
 default__acme__domain: 'example.com'
 
 default__acme__log_dir: '/var/log/acme'
