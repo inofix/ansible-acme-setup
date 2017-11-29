@@ -100,6 +100,7 @@
   lineinfile:
     dest: '{{ acme__home }}/.ssh/authorized_keys'
     line: 'command="{{ acme__wrapper }}" {{ lookup("file", the_file) }}'
+    create: 'yes'
     owner: '{{ acme__user }}'
     group: '{{ acme__group }}'
     mode: '0600'
