@@ -24,8 +24,6 @@ acme__account_key: '{{ app__acme__account_key |
 acme__key_length: '{{ app__acme__key_length |
                             d(default__acme__key_length) }}'
 
-the__fqdn: '{{ fqdn | d(ansible_fqdn) | d(inventory_hostname) }}'
-
 acme__log_dir: '{{ app__acme__log_dir | d(default__acme__log_dir) }}'
 
 acme__letsencrypt_certs: '{{ app__acme__letsencrypt_certs |
