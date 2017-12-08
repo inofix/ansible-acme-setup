@@ -25,16 +25,8 @@ acme__key_length: '{{ app__acme__key_length |
                             d(default__acme__key_length) }}'
 
 the__fqdn: '{{ fqdn | d(ansible_fqdn) | d(inventory_hostname) }}'
-acme__domain: '{{ app__acme__domain | d(default__acme__domain) }}'
-
-acme__cert_name: '{{ acme__domain[0]
-                            if (acme__domain is iterable and
-                            not acme__domain is string)
-                            else acme__domain }}'
 
 acme__log_dir: '{{ app__acme__log_dir | d(default__acme__log_dir) }}'
-acme__cert_path: '{{ acme__config_dir }}/{{ acme__cert_name }}'
-acme__cert_dir: '{{ acme__cert_path }}'
 
 acme__letsencrypt_certs: '{{ app__acme__letsencrypt_certs |
                             d(default__acme__letsencrypt_certs) }}'

@@ -46,7 +46,6 @@
     mode: '0755'
   with_items:
     - '{{ acme__config_dir }}'
-    - '{{ acme__cert_dir }}'
     - '{{ acme__scripts_dir }}'
     - '{{ acme__service_dir }}'
 
