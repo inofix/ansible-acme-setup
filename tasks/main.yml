@@ -37,6 +37,22 @@
     dest: '{{ workdir }}'
     validate_checksum: true
 
+- name: 'Set the permissions on the private key file'
+  file:
+    path: '{{ acme__home }}/.ssh/id_{{ acme__ssh_keytype }}'
+    state: file
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
+    mode: '0600'
+
+- name: 'Set the permissions on the public key file'
+  file:
+    path: '{{ acme__home }}/.ssh/id_{{ acme__ssh_keytype }}.pub'
+    state: file
+    owner: '{{ acme__user }}'
+    group: '{{ acme__group }}'
+    mode: '0644'
+
 - name: 'Configuration and certificate directories'
   file:
     path: '{{ item }}'
@@ -46,7 +62,6 @@
     mode: '0755'
   with_items:
     - '{{ acme__config_dir }}'
-    - '{{ acme__cert_dir }}'
     - '{{ acme__scripts_dir }}'
     - '{{ acme__service_dir }}'
 

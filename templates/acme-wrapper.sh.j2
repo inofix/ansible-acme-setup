@@ -11,22 +11,22 @@ args="${SSH_ORIGINAL_COMMAND#* }"
 # consider the first part to be a command
 action="${args%% *}"
 # consider the last part to be the argument
-domain="${args##* }"
+certname="${args##* }"
 # (ignoring any pot. middle of the string)
 
 # control what the ssh user can do
 case "$action" in
     get_cert*)
-        {{ acme__bin_dir }}/acme-control.sh $action $domain
+        {{ acme__bin_dir }}/acme-control.sh $action $certname
     ;;
-    get_ca|get_intermediate)
-        {{ acme__bin_dir }}/acme-control.sh $action
+    get_ca)
+        {{ acme__bin_dir }}/acme-control.sh $action $certname
     ;;
     *)
         echo "usage: this wrapper script is thought to be used"
         echo "on ssh-connections to restrict access to acme-control.sh"
         echo "please log in as the acme user providing a supported action"
-        echo "and an existing certificate domain name."
+        echo "and an existing certificate name."
         exit 1
     ;;
 esac
