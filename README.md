@@ -77,7 +77,7 @@ _Role Perspective_
 * inofix.acme-tiny-sign
   * run on hosts signing certs with Let's Encrypt (only needs the csr)
   * use acme-tiny.py to ask Let's Encrypt to sign a cert for the csr
-* inofix.acme-tiny-cron-sign
+* inofix.acme-tiny-cron
   * run on hosts signing certs with Let's Encrypt (only needs the csr)
   * install a cron job to do the signing part as in inofix.acme-tiny-sign
 * inofix.acme-proxy
@@ -95,7 +95,7 @@ _Host Perspective_
   * inofix.acme-setup (this role)
   * inofix.acme-tiny-install
   * inofix.acme-tiny-sign
-  * inofix.acme-tiny-sign-cron (to automatically repeat the signing once a month)
+  * inofix.acme-tiny-cron (to automatically repeat the signing once a month)
 * A host that makes only use of the certificates, but does not itself request the signing directly with Let's Encrypt will need to run these roles
   * inofix.acme-setup (this role)
   * inofix.acme-request
@@ -106,7 +106,7 @@ _Host Perspective_
   * inofix.acme-tiny-install
   * inofix.acme-request
   * inofix.acme-tiny-sign
-  * inofix.acme-tiny-sign-cron (to automatically repeat the signing once a month)
+  * inofix.acme-tiny-cron (to automatically repeat the signing once a month)
   * inofix.acme-service-\<service\> (to restart the service if the certificate has changed)
 
 
