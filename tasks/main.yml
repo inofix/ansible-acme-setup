@@ -132,6 +132,12 @@
     mode: '0644'
   with_items: '{{ acme__letsencrypt_certs }}'
 
+- name: 'Fix line endings in case they contain some strange alien characters'
+  replace:
+    dest: '{{ acme__config_dir }}/{{ item.file }}'
+    regexp: '\r$'
+  with_items: '{{ acme__letsencrypt_certs }}'
+
 - name: 'Account key'
   shell: "umask 027 && /usr/bin/openssl genrsa '{{ acme__key_length }}' > '{{ acme__account_key }}'"
   args:
