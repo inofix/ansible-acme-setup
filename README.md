@@ -3,11 +3,29 @@
 Acme Setup
 ==========
 
-This is an ansible role for setting up and preparing everything that is required for later signing certificates with let's encrypt - see inofix.acme-tiny-sign.
+This is an ansible role for setting up and preparing everything that is
+required for later signing certificates with let's encrypt, i.e.
+installing the user, and relevant directories and scripts, and setting
+the permissions right.
 
-This role is meant to be run on any host that needs certificates.
-If the host is not accessible via web - or does not use the inofix.acme-tiny-sign role for other reasons - a solution must be provided to transfer the cert-request forth and the final certificate back from this host to the acme-host. See inofix.acme-cron-proxy for an example.
+This role is meant to be run on any host that needs certificates for itself
+or signs any for some other host.
+
+See inofix.acme-request for the creation of the private key and the
+certificate requests resp. the installation of a remotely created
+request on a "signing" or "certificate-proxy" host.
+
+The inofix.acme-tiny-install role installes the acme-tiny script on
+"signing" hosts.
+
+The inofix.acme-tiny-sign / inofix.acme-tiny-cron resp. roles do care
+for the actual (resp. periodical) signing on the "signing" hosts.
+
 Any host that signs certificates with the Let's Encrypt service, requires a web-server listening on port 80 and resolving /.well-known/acme-challenge to the directory accessible for the signing tool - see inofix.acme-sign for an example.
+
+Hosts relying on other hosts to do the signing for them (e.g. they
+have no webservice installed) can access and transfere the ready
+signed certs from their proxy host with inofix.acme-proxy.
 
 See "Overview / Concept" below for details.
 
@@ -22,7 +40,7 @@ Why we do not use one of the existing roles?
 State
 -----
 
-UNSTABLE! We are just migrating from zwischenloesung.acme-tiny-setup.
+preSTABLE (Feature-Freeze/RC)
 
 
 Promise
@@ -30,7 +48,7 @@ Promise
 
 Sure, this role may change in the future, but we will only expand features to not break backwards compatibility.
 
-If radical changes should become necessary, a new role will be created, probably with an 'ng' or version suffix...
+If radical changes should become necessary, a new role will be created, probably with a version suffix...
 
 Installation
 ------------
@@ -61,7 +79,6 @@ _Role Perspective_
     * create user 'acme'
     * create keys etc
       * /etc/ssl/acme
-        * certs
         * scripts
         * connected services
       * /var/log/acme
@@ -69,24 +86,29 @@ _Role Perspective_
       * /var/lib/acme
         * home for user signing and copying certs
 * inofix.acme-request
-  * run on hosts using a cert (thus holding the private key)
-  * create a certificate-request (csr)
+  * run on hosts using or signing a cert
+  * on hosts using a cert
+   * create the private key
+   * create a certificate-request (csr)
+  * on proxy hosts
+   * install the csr from "offline" hosts
 * inofix.acme-tiny-install
-  * run on hosts signing certs with Let's Encrypt (only needs the csr)
+  * run on hosts signing certs with Let's Encrypt
   * install the acme-tiny.py script
 * inofix.acme-tiny-sign
-  * run on hosts signing certs with Let's Encrypt (only needs the csr)
+  * run on hosts signing certs with Let's Encrypt
+   * only needs the csr: the private key is not even read (or absent for proxy)
   * use acme-tiny.py to ask Let's Encrypt to sign a cert for the csr
 * inofix.acme-tiny-cron
-  * run on hosts signing certs with Let's Encrypt (only needs the csr)
-  * install a cron job to do the signing part as in inofix.acme-tiny-sign
+  * run on hosts signing certs with Let's Encrypt
+   * only needs the csr: the private key is not even read (or absent for proxy)
+  * install a cron job to do the signing part (as in inofix.acme-tiny-sign)
 * inofix.acme-proxy
   * run on hosts using a cert but not doing the signing themselves (e.g. mail/jabber/..)
   * copy the cert from a remote host (that did the signing)
 * inofix.acme-service-..
   * run on all hosts using a cert (i.e. running a certified service...)
   * register a service to be restarted if any cert has changed
-
 
 
 _Host Perspective_
@@ -120,16 +142,18 @@ Role Variables
 * app\_\_acme\_\_openssl\_config - optional, default='/etc/ssl/openssl.cnf'
 * app\_\_acme\_\_challenge\_dir - optional, default='/var/www/acme-challenges'
 * app\_\_acme\_\_scripts\_dir - optional, default='/etc/ssl/acme/scripts'
+* app\_\_acme\_\_service\_dir - optional, default='/etc/ssl/acme/service.d'
 * app\_\_acme\_\_bin\_dir - optional, default='/usr/local/bin'
 * app\_\_acme\_\_account\_key - optional, default='account.key'
-* app\_\_acme\_\_domain - optional, default='example.com'
-* app\_\_acme\_\_cert\_name - optional, auto
-* app\_\_acme\_\_log\_dir - optional, default='/var/log/acme'
-* app\_\_acme\_\_cert\_dir - optional, auto
-* app\_\_acme\_\_key - optional, auto
-* app\_\_acme\_\_request - optional, auto
-* app\_\_acme\_\_letsencrypt\_certs - optional, default=[ {url='https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem', file='intermediate.crt'}, {url='https://letsencrypt.org/certs/isrgrootx1.pem', file='ca.crt'} ]
 * app\_\_acme\_\_key\_length - optional, default=4096
+* app\_\_acme\_\_ssh\_keytype - optional, default='rsa'
+* app\_\_acme\_\_log\_dir - optional, default='/var/log/acme'
+* app\_\_acme\_\_letsencrypt\_certs - optional, default=[ {url='https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem', file='intermediate.crt'}, {url='https://letsencrypt.org/certs/isrgrootx1.pem', file='ca.crt'} ]
+* app\_\_acme\_\_cron\_minute - optional, default='11'
+* app\_\_acme\_\_cron\_hour - optional, default='5'
+* app\_\_acme\_\_cron\_day - optional, default='\*'
+* app\_\_acme\_\_cron\_month - optional, default='\*'
+* app\_\_acme\_\_cron\_year - optional, default='\*'
 * fqdn - optional, default={{ ansible\_fqdn | d(inventory\_hostname ) }}
 * workdir - optional, default=/tmp (local dir, used for ssh-pub-key exchange)
 
@@ -143,6 +167,8 @@ Example Playbook
     - hosts: servers
       roles:
          - inofix.acme-setup
+
+See https://raw.githubusercontent.com/inofix/common-playbooks/master/setup-lets-encrypt.yml for a complete playbook with all the relevant roles included.
 
 License
 -------

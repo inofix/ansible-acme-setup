@@ -12,7 +12,7 @@ default__acme__service_dir: '{{ default__acme__config_dir }}/service.d'
 default__acme__bin_dir: '/usr/local/bin'
 
 default__acme__account_key: '{{ default__acme__config_dir }}/account.key'
-default__acme__account_key_length: 4096
+default__acme__key_length: 4096
 
 default__acme__log_dir: '/var/log/acme'
 
@@ -23,7 +23,6 @@ default__acme__letsencrypt_certs:
     file: 'ca.crt'
 
 default__acme__ssh_keytype: 'rsa'
-default__acme__remote_consumer: []
 
 default__acme__cron_minute: '11'
 default__acme__cron_hour: '5'
