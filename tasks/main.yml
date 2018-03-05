@@ -111,18 +111,6 @@
     month: '{{ acme__cron_month }}'
     weekday: '{{ acme__cron_weekday }}'
 
-- name: 'Allow remote access to the certificates - for defined consumers'
-  lineinfile:
-    dest: '{{ acme__home }}/.ssh/authorized_keys'
-    line: 'command="{{ acme__wrapper }}" {{ lookup("file", the_file) }}'
-    create: 'yes'
-    owner: '{{ acme__user }}'
-    group: '{{ acme__group }}'
-    mode: '0600'
-  vars:
-    the_file: '{{ workdir }}/{{ item }}/{{ acme__home }}/.ssh/id_{{ acme__ssh_keytype }}.pub'
-  with_items: '{{ acme__remote_consumer }}'
-
 - name: 'Download letsencrypt CA and intermediate certificates'
   get_url:
     url: '{{ item.url }}'
