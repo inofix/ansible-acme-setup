@@ -53,7 +53,7 @@ If radical changes should become necessary, a new role will be created, probably
 Installation
 ------------
 
- # ansible-galaxy install inofix.acme-setup
+    # ansible-galaxy install inofix.acme-setup
 
 Requirements
 ------------
