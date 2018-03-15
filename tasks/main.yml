@@ -103,7 +103,7 @@
 - name: 'Install a cron job to restart registered services on cert changes'
   cron:
     name: 'acme-service-restart'
-    job: '{{ acme__restart }} 2>> {{ acme__log_dir }}/acme-services.log'
+    job: '{{ acme__restart }} >> {{ acme__log_dir }}/acme-services.log 2>&1 || echo "Service restart failed: human help needed.."'
     user: 'root'
     minute: '{{ acme__cron_minute }}'
     hour: '{{ acme__cron_hour }}'
